@@ -32,6 +32,7 @@ main:
 	prompt: .asciz "Enter max loop value: "
 	formatInput: .asciz "%d"
 	input: .word 0
+	output: .asciz "The divided value is %d and the remainder is %d\n"
 
 #end main
 
@@ -44,7 +45,6 @@ Prime:
 	#initialize outer
 	MOV r4, #3
 	MOV r5, r1
-	#ADD r5, r5, #1
 
 	#initialize inner
 	MOV r6, #2
@@ -52,7 +52,6 @@ Prime:
 	MOV r1, #2
 	BL __aeabi_idiv
 	MOV r7, r0
-	#ADD r7, r7, #1
 
 	#start outer loop
 	startOuterLoop:
@@ -64,38 +63,45 @@ Prime:
 		startInnerLoop:
 
 			#check the limit
-			#ADD r7, r7, #1
 			CMP r6, r7
 			BGT endInnerLoop
 
 			#inner loop block
 
 			#modulus r4 % r6
-			AND r8, r4, r6
-			CMP r8, #0
+			MOV r0, r4
+			MOV r1, r6
+			BL __aeabi_idiv
+			#remainder % value
+			MUL r9, r0, r6
+			SUB r10, r4, r9
+
+			
+			CMP r10, #0
 			BEQ elsif_1
-				#remainder is not equal to 0
+				#remainder is not equal to zero
 				CMP r6, r7
-				BEQ elsif_2
-					#not equal
-					B endInnerLoop
-					
-				elsif_2:
-					#equal
+				BEQ elsif_3
+					#not equal to one another
+					B endIf
+
+				elsif_3:
+					#equal to one another
 					MOV r1, r4
 					LDR r0, =primeMsg
 					BL printf
 					B endInnerLoop
-			
+				
 			elsif_1:
-				#remainder is equal to 0
+				#remainder is equal to zero
+				#compare r4 (i), r6 (j)
 				CMP r4, r6
-				BEQ elsif_3
-					#not equal
+				BEQ elsif_2
+					#r4, r6 not equal to one another
 					B endInnerLoop
-				elsif_3:
-					#equal
-					B endIf	
+				elsif_2:
+					#r4, r6 equal to one another
+					B endIf
 
 			endIf:
 
@@ -119,6 +125,4 @@ Prime:
 	ADD sp, sp, #4
 	MOV pc, lr
 .data
-	rem0Msg: .asciz "The remainder is zero, %d\n"
-	remNot0Msg: .asciz "The remainder is not zero, it is %d\n"
 	primeMsg: .asciz "%d is prime\n"
