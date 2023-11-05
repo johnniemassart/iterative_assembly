@@ -5,6 +5,15 @@
 .text
 .global main
 main:
+	#program dictionary
+	#r4 -> min. loop value
+	#r5 -> max. loop value - user input
+	#r6 -> user response Y/N
+	#r7 -> mid value
+	#r9 -> guess counter
+	#r10 -> user response high/low
+	#r11 -> secret number
+
 	#push the stack
 	SUB sp, sp, #4
 	STR lr, [sp, #0]

@@ -1,8 +1,16 @@
+#Program Name: primeNums.s
+#Author: Johnnie Massart
+#Date: 11/5/2023
+#Purpose: output prime numbers within max loop value
 .text
 .global main
 main:
 	#program dictionary
-	#
+	#r4 -> outer loop counter
+	#r5 -> max loop value, user input
+	#r6 -> inner loop counter
+	#r7 -> inner loop max value
+	#r10 -> remainder (%) value
 
 	#push the stack
 	SUB sp, sp, #4
